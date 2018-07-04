@@ -5,6 +5,7 @@
    [lcsim.events :as events]
    [lcsim.views :as views]
    [lcsim.config :as config]
+   [lcsim.db :as db]
    ))
 
 
@@ -22,3 +23,16 @@
   (re-frame/dispatch-sync [::events/initialize-db])
   (dev-setup)
   (mount-root))
+
+(defn move []
+  (let [marked (:marked-cells db/default-db)
+    mx (first marked)
+    my (second marked)]
+
+  (println "mx" mx)
+  (re-frame/dispatch [::events/update-marked 1 2]))
+)
+
+
+
+(js/setInterval #(move) 1000)

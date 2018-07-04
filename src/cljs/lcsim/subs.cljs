@@ -12,3 +12,8 @@
  ::grid-dimensions
  (fn [db]
    (:grid-dimensions db)))
+
+(re-frame/reg-sub
+ ::marked-cells
+ (fn [db]
+   (:marked-cells db)))

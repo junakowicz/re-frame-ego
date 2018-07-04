@@ -1,6 +1,7 @@
 (ns lcsim.views
   (:require
    [re-frame.core :as rf]
+   [lcsim.events :as events]
    [lcsim.subs :as subs]))
 
 (defn get-color [cell-type]
@@ -15,7 +16,7 @@
                       (= y (second marked)))
                "blue"
                )]
-    (println "~~~~~~~" (first marked) x (second marked) y type)
+    ; (println "~~~~~~~" (first marked) x (second marked) y type)
     [:div
      {:id "sd"
       :style {:border "solid"
@@ -42,6 +43,28 @@
   (let [name (rf/subscribe [::subs/name])]
     [:div
      [:p "H " @name]
-     [grid]]))
+     [grid]
+     [:div {:style
+            {:display "flex"
+              :flex-wrap "nowrap"}}
+     [:button {:on-click #(rf/dispatch [::events/set-direction {:x -1 :y -1}])} "\\"]
+     [:button {:on-click #(rf/dispatch [::events/set-direction {:x 0 :y -1}])} "|"]
+     [:button {:on-click #(rf/dispatch [::events/set-direction {:x 1 :y -1}])} "/"]
+      ]
+     [:div {:style
+            {:display "flex"
+              :flex-wrap "nowrap"}}
+     [:button {:on-click #(rf/dispatch [::events/set-direction {:x -1 :y 0}])} "<"]
+     [:button {:on-click #(rf/dispatch [::events/set-direction {:x 0 :y 0}])} "O"]
+     [:button {:on-click #(rf/dispatch [::events/set-direction {:x 1 :y 0}])} ">"]
+      ]
+     [:div {:style
+            {:display "flex"
+              :flex-wrap "nowrap"}}
+     [:button {:on-click #(rf/dispatch [::events/set-direction {:x -1 :y 1}])} "/"]
+     [:button {:on-click #(rf/dispatch [::events/set-direction {:x 0 :y 1}])} "|"]
+     [:button {:on-click #(rf/dispatch [::events/set-direction {:x 1  :y 1}])} "\\"]]
+     ]
+             ))
 
 

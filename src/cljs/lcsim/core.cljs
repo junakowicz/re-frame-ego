@@ -30,7 +30,7 @@
     my (second marked)]
 
   (println "mx" mx)
-  (re-frame/dispatch [::events/update-marked 1 2]))
+  (re-frame/dispatch [::events/move 1 2]))
 )
 
 

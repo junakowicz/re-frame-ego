@@ -12,10 +12,13 @@
 
 (defn cell [x y]
   (let [marked  @(rf/subscribe [::subs/marked-cells])
-        type (if (and (= x (first marked))
-                      (= y (second marked)))
+        typem (map #(if (and (= x (first %))
+                      (= y (second %)))
                "blue"
-               )]
+               ) marked)
+        type (reduce (fn [a b] (or a b)) typem)
+]
+    (println "typem " typem)
     [:div
      {:id "sd"
       :style {:border "solid"

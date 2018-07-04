@@ -9,8 +9,8 @@
 (defn wrap-move [dimensions xpos ypos]
   (let [xmax (:w dimensions)
         ymax (:h dimensions)
-        xnew (check-bounds xpos xmax)
-        ynew (check-bounds ypos ymax)]
+        xnew (map #(check-bounds % xmax) xpos)
+        ynew (map #(check-bounds % ymax) ypos)]
     [xnew ynew]))
 
 

@@ -13,17 +13,22 @@
 (re-frame/reg-event-db
  ::move
  (fn [db [e _ _]]
-   (let [cell-pos (:marked-cells db)
-         cell-x (first cell-pos)
-         cell-y (second cell-pos)
+   (let [cells-pos (:marked-cells db)
+         cells-x (for [pos cells-pos] (first pos))
+         cells-y (for [pos cells-pos] (second pos))
          dimensions (:grid-dimensions db)
          direction (:direction db)
          dx (:x direction)
          dy (:y direction)
-         tox (+ dx cell-x)
-         toy (+ dy cell-y)]
-     (println "============" e cell-x cell-y)
-     (assoc db :marked-cells (utils/wrap-move dimensions tox toy)))))
+         tox (map #( + dx %) cells-x)
+         toy (map #(+ dy %) cells-y)
+         newpositions (utils/wrap-move dimensions tox toy)
+         vex (first newpositions)
+         vey (second newpositions)
+         veo (apply map vector [vex vey])
+         ]
+     (println "============" e  cells-x cells-y "tox" tox "newpositions" newpositions "vex" vex "veo" veo)
+     (assoc db :marked-cells veo))))
 
 (re-frame/reg-event-db
  ::set-direction

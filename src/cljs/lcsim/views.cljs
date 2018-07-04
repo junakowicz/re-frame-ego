@@ -16,7 +16,6 @@
                       (= y (second marked)))
                "blue"
                )]
-    ; (println "~~~~~~~" (first marked) x (second marked) y type)
     [:div
      {:id "sd"
       :style {:border "solid"
@@ -39,18 +38,14 @@
     [:div
      (for [y (range h)] [grid-row y w])]))
 
-(defn main-panel []
-  (let [name (rf/subscribe [::subs/name])]
+(defn controls []
     [:div
-     [:p "H " @name]
-     [grid]
      [:div {:style
             {:display "flex"
               :flex-wrap "nowrap"}}
      [:button {:on-click #(rf/dispatch [::events/set-direction {:x -1 :y -1}])} "\\"]
      [:button {:on-click #(rf/dispatch [::events/set-direction {:x 0 :y -1}])} "|"]
-     [:button {:on-click #(rf/dispatch [::events/set-direction {:x 1 :y -1}])} "/"]
-      ]
+     [:button {:on-click #(rf/dispatch [::events/set-direction {:x 1 :y -1}])} "/"]]
      [:div {:style
             {:display "flex"
               :flex-wrap "nowrap"}}
@@ -63,8 +58,14 @@
               :flex-wrap "nowrap"}}
      [:button {:on-click #(rf/dispatch [::events/set-direction {:x -1 :y 1}])} "/"]
      [:button {:on-click #(rf/dispatch [::events/set-direction {:x 0 :y 1}])} "|"]
-     [:button {:on-click #(rf/dispatch [::events/set-direction {:x 1  :y 1}])} "\\"]]
-     ]
+     [:button {:on-click #(rf/dispatch [::events/set-direction {:x 1  :y 1}])} "\\"]]])
+
+(defn main-panel []
+  (let [name (rf/subscribe [::subs/name])]
+    [:div
+     [:p "H " @name]
+     [grid]
+     [controls]]
              ))
 
 

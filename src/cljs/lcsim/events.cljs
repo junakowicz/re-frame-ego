@@ -11,23 +11,12 @@
    db/default-db))
 
 
-(defn offset-cells [cells-pos offset-xy]
-   (let [cells-x (for [pos cells-pos] (first pos))
-         cells-y (for [pos cells-pos] (second pos))
-         dx (:x offset-xy)
-         dy (:y offset-xy)
-         tox (map #(+ dx %) cells-x)
-         toy (map #(+ dy %) cells-y)]
-      [tox toy]
-     ))
-
-
 (re-frame/reg-event-db
  ::move
  (fn [db [e _ _]]
    (let [cells-pos (:marked-cells db)
          direction (:direction db)
-         [tox toy] (offset-cells cells-pos direction)
+         [tox toy] (utils/offset-cells cells-pos direction)
          dimensions (:grid-dimensions db)
          newpositions (utils/wrap-move dimensions tox toy)
         ;  [vex vey] newpositions

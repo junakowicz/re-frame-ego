@@ -1,6 +1,7 @@
 (ns lcsim.events
   (:require
    [re-frame.core :as re-frame]
+   [clojure.string :as string]
    [lcsim.db :as db]
    [lcsim.utils :as utils]
    ))
@@ -32,10 +33,21 @@
 
      (assoc db :direction d)))
 
-(re-frame/reg-event-db
+; https://github.com/Day8/re-frame/blob/master/docs/EffectfulHandlers.md
+(re-frame/reg-event-fx                             
  ::lcd-text-change
+ (fn [{:keys [db]} [e d]]
+     (println "============fx" e d)
+                   
+   {:db  (assoc db :lcd-text (string/upper-case d))          
+    :dispatch [::reset-screen]
+    }))
+
+(re-frame/reg-event-db
+ ::reset-screen
  (fn [db [e d]]
      (println "============" e d)
-     (assoc db :lcd-text d)))
+   db
+     ))
 
 

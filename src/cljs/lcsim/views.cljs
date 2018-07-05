@@ -33,6 +33,18 @@
           :flex-wrap "nowrap"}}
    (for [x (range w)] [cell x y])])
 
+(defn input-lcd-text []
+  (let [lcd-text (rf/subscribe [::subs/lcd-text-change])]
+    (fn []
+      [:div
+        [:input       {:value @lcd-text
+         :on-change   #(rf/dispatch [::events/lcd-text-change (-> % .-target .-value)])}]])))
+
+(defn repeat-text []
+      [:div
+       [:p "The LCD text is: " @(rf/subscribe [::subs/lcd-text-change])]
+       ])
+
 
 (defn grid []
   (let [grid-dimensions @(rf/subscribe [::subs/grid-dimensions])
@@ -67,8 +79,11 @@
   (let [name (rf/subscribe [::subs/name])]
     [:div
      [:p "H " @name]
+     [repeat-text]
      [grid]
-     [controls]]
+     [controls]
+     [input-lcd-text]
+     ]
              ))
 
 

@@ -32,4 +32,10 @@
 
      (assoc db :direction d)))
 
+(re-frame/reg-event-db
+ ::lcd-text-change
+ (fn [db [e d]]
+     (println "============" e d)
+     (assoc db :lcd-text d)))
+
 

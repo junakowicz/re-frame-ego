@@ -17,3 +17,8 @@
  ::marked-cells
  (fn [db]
    (:marked-cells db)))
+
+(re-frame/reg-sub
+ ::lcd-text-change
+ (fn [db]
+   (:lcd-text db)))

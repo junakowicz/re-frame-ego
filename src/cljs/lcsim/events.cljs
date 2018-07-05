@@ -46,8 +46,11 @@
 (re-frame/reg-event-db
  ::reset-screen
  (fn [db [e d]]
-     (println "============" e d)
-   db
-     ))
+   (println "============" e d)
+   (let [txt (:lcd-text db)
+         cells (utils/cells-from-text txt)]
+     (println "============txt" txt "cells" cells)
+
+     (assoc db :marked-cells cells))))
 
 

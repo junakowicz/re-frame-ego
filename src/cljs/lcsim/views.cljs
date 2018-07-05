@@ -18,7 +18,7 @@
                ) marked)
         type (reduce (fn [a b] (or a b)) typem)
 ]
-    (println "typem " typem)
+    ; (println "typem " typem)
     [:div
      {:id "sd"
       :style {:border "solid"

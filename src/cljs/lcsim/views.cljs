@@ -34,7 +34,7 @@
    (for [x (range w)] [cell x y])])
 
 (defn input-lcd-text []
-  (let [lcd-text (rf/subscribe [::subs/lcd-text-change])]
+  (let [lcd-text (rf/subscribe [::subs/lcd-text])]
     (fn []
       [:div
         [:input       {:value @lcd-text
@@ -42,7 +42,7 @@
 
 (defn repeat-text []
       [:div
-       [:p "The LCD text is: " @(rf/subscribe [::subs/lcd-text-change])]
+       [:p "The LCD text is: " @(rf/subscribe [::subs/lcd-text])]
        ])
 
 

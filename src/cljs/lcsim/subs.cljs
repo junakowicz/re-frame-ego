@@ -19,6 +19,6 @@
    (:marked-cells db)))
 
 (re-frame/reg-sub
- ::lcd-text-change
+ ::lcd-text
  (fn [db]
    (:lcd-text db)))

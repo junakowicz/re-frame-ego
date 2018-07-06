@@ -21,8 +21,8 @@
         is-bullet (some #(= [x y] %) bullet-cells)
         is-ship (some #(= [x y] %) ship-cells)]
 
-(if is-bullet (println "bullet at" x y "ship-cells" ship-cells))
-(if is-shape (println "shape at" x y))
+; (if is-bullet (println "bullet at" x y "ship-cells" ship-cells))
+; (if is-shape (println "shape at" x y))
     ; (println "bullet-cells " bullet-cells)
     ; (println "has-shape " has-shape "type" type)
     [:div

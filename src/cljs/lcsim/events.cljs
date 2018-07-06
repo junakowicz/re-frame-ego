@@ -64,4 +64,26 @@
 
      (assoc-in db [:shapes :cells] cells))))
 
+(re-frame/reg-event-db
+ ::move-ship
+ (fn [db [e direction]]
+   (let [cells-pos (get-in db [:ship :cells])
+         [tox toy] (utils/offset-cells cells-pos direction)
+         dimensions (:grid-dimensions db)
+         newpositions (utils/wrap-move dimensions tox toy)
+         veo (apply map vector newpositions);recreate to format [[1 1] [0 1]]
+         ]
+     (assoc-in db [:ship :cells] veo))))
+
+(re-frame/reg-event-fx
+ ::controll-ship
+ (fn [{:keys [db]} [e k]]
+   (println "===========controll=fx" e k)
+   (let [step (cond
+                (= k 38) {:x 0 :y -1}
+                (= k 40) {:x 0 :y 1}
+                (= k 37) {:x -1 :y 0}
+                (= k 39) {:x 1 :y 0})]
+     {:db  db
+      :dispatch [::move-ship step]})))
 

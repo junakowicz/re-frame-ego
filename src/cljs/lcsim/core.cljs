@@ -29,5 +29,13 @@
   (re-frame/dispatch [::events/move-bullets])
   )
 
+(defn keydown [e]
+  (println (.-keyCode e))
+  (if (some #(= (.-keyCode e) %) [32 37 38 39 40])
+    (do (.preventDefault e)
+        (re-frame/dispatch [::events/controll-ship (.-keyCode e)]))))
 
 (js/setInterval #(move) 1000)
+(set! (.-onkeydown js/document) keydown)
+
+

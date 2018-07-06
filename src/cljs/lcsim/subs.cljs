@@ -7,7 +7,6 @@
  (fn [db]
    (:name db)))
 
-
 (re-frame/reg-sub
  ::grid-dimensions
  (fn [db]

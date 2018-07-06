@@ -71,6 +71,6 @@
     :else shapes/QUESTION))
 
 (defn cells-from-text [txt]
-  (let [grouped (map-indexed (fn [idx itm] (offset-cells-to-vec (get-shape itm) {:x (* idx 5) :y 3})) txt)]
+  (let [grouped (map-indexed (fn [idx itm] (offset-cells-to-vec (get-shape itm) {:x (* idx 5) :y 1})) txt)]
 
     (apply concat grouped)))

@@ -14,9 +14,9 @@
    (:grid-dimensions db)))
 
 (re-frame/reg-sub
- ::marked-cells
+ ::shape-cells
  (fn [db]
-   (:marked-cells db)))
+   (get-in db [:shapes :cells])))
 
 (re-frame/reg-sub
  ::lcd-text

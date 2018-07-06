@@ -15,23 +15,22 @@
 (re-frame/reg-event-db
  ::move
  (fn [db [e _ _]]
-   (let [cells-pos (:marked-cells db)
-         direction (:direction db)
+   (let [cells-pos (get-in db [:shapes :cells])
+         direction (get-in db [:shapes :direction] )
          [tox toy] (utils/offset-cells cells-pos direction)
          dimensions (:grid-dimensions db)
          newpositions (utils/wrap-move dimensions tox toy)
         ;  [vex vey] newpositions
          veo (apply map vector newpositions);recreate to format [[1 1] [0 1]]
          ]
-    ;  (println "============" e "tox" tox "newpositions" newpositions "vex" vex "veo" veo)
-     (assoc db :marked-cells veo))))
+    ;  (println "============" e "tox" tox "newpositions" newpositions  "veo" veo)
+     (assoc-in db [:shapes :cells] veo))))
 
 (re-frame/reg-event-db
  ::set-direction
  (fn [db [e d]]
      (println "============" e d)
-
-     (assoc db :direction d)))
+     (assoc-in db [:shapes :direction] d)))
 
 ; https://github.com/Day8/re-frame/blob/master/docs/EffectfulHandlers.md
 (re-frame/reg-event-fx                             
@@ -51,6 +50,6 @@
          cells (utils/cells-from-text txt)]
      (println "============txt" txt "cells" cells)
 
-     (assoc db :marked-cells cells))))
+     (assoc-in db [:shapes :cells] cells))))
 
 

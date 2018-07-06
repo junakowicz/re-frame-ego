@@ -8,7 +8,6 @@
    [lcsim.db :as db]
    ))
 
-
 (defn dev-setup []
   (when config/debug?
     (enable-console-print!)
@@ -21,18 +20,12 @@
 
 (defn ^:export init []
   (re-frame/dispatch-sync [::events/initialize-db])
+  (re-frame/dispatch-sync [::events/reset-screen])
   (dev-setup)
   (mount-root))
 
 (defn move []
-  (let [marked (:marked-cells db/default-db)
-    mx (first marked)
-    my (second marked)]
-
-  (println "mx" mx)
   (re-frame/dispatch [::events/move 1 2]))
-)
-
 
 
 (js/setInterval #(move) 1000)

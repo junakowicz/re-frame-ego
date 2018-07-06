@@ -11,7 +11,7 @@
     :else "white"))
 
 (defn cell [x y]
-  (let [marked  @(rf/subscribe [::subs/marked-cells])
+  (let [marked  @(rf/subscribe [::subs/shape-cells])
         typem (map #(if (and (= x (first %))
                       (= y (second %)))
                "blue"

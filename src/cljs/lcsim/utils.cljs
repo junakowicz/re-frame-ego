@@ -3,7 +3,7 @@
  [lcsim.shapes :as shapes])
 )
 
-(defn check-bounds [pos max]
+(defn wrap-bounds [pos max]
   (cond
     (> pos max) 0
     (< pos 0) max
@@ -12,8 +12,21 @@
 (defn wrap-move [dimensions xpos ypos]
   (let [xmax (:w dimensions)
         ymax (:h dimensions)
-        xnew (map #(check-bounds % xmax) xpos)
-        ynew (map #(check-bounds % ymax) ypos)]
+        xnew (map #(wrap-bounds % xmax) xpos)
+        ynew (map #(wrap-bounds % ymax) ypos)]
+    [xnew ynew]))
+
+(defn destroy-on-bounds [pos max]
+  (cond
+    (> pos max) nil
+    (< pos 0) nil
+    :else pos))
+
+(defn destroy-out [dimensions xpos ypos]
+  (let [xmax (:w dimensions)
+        ymax (:h dimensions)
+        xnew (map #(destroy-on-bounds % xmax) xpos)
+        ynew (map #(destroy-on-bounds % ymax) ypos)]
     [xnew ynew]))
 
 (defn offset-cells [cells-pos offset-xy]

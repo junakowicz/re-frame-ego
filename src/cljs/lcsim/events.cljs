@@ -64,6 +64,18 @@
 
      (assoc-in db [:shapes :cells] cells))))
 
+;;SHIP
+
+(re-frame/reg-event-db
+ ::emit-bullet
+ (fn [db [e _]]
+   (let [cells-pos (get-in db [:ship :cells])
+         [lcx lcy] (first cells-pos)
+         bullet-pos [(inc lcx) lcy]
+         ]
+     (println "===========" "lcx lcy" lcx lcy "bullet-pos " bullet-pos)
+     (assoc-in db [:bullets :cells] [bullet-pos]))))
+
 (re-frame/reg-event-db
  ::move-ship
  (fn [db [e direction]]
@@ -83,7 +95,10 @@
                 (= k 38) {:x 0 :y -1}
                 (= k 40) {:x 0 :y 1}
                 (= k 37) {:x -1 :y 0}
-                (= k 39) {:x 1 :y 0})]
+                (= k 39) {:x 1 :y 0})
+     action (if step [::move-ship step]
+                [::emit-bullet])]
+
      {:db  db
-      :dispatch [::move-ship step]})))
+      :dispatch action})))
 

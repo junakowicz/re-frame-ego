@@ -72,9 +72,11 @@
    (let [cells-pos (get-in db [:ship :cells])
          [lcx lcy] (first cells-pos)
          bullet-pos [(inc lcx) lcy]
-         ]
-     (println "===========" "lcx lcy" lcx lcy "bullet-pos " bullet-pos)
-     (assoc-in db [:bullets :cells] [bullet-pos]))))
+        
+     current-bullets (get-in db [:bullets :cells])
+     updated-bullets (concat current-bullets [bullet-pos]) ]
+     (println "===========" "lcx lcy" lcx lcy "bullet-pos " bullet-pos "current-bullets" current-bullets "updated-bullets" updated-bullets)
+     (assoc-in db [:bullets :cells] updated-bullets))))
 
 (re-frame/reg-event-db
  ::move-ship

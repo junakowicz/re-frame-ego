@@ -4,28 +4,33 @@
    [lcsim.events :as events]
    [lcsim.subs :as subs]))
 
-(defn get-color [cell-type]
+(defn get-color [is-shape is-bullet]
   (cond
-    (= cell-type "blue") "lightblue"
-    (= cell-type "black") "black"
+    is-shape "lightblue"
+    is-bullet "black"
     :else "white"))
 
 (defn cell [x y]
-  (let [marked  @(rf/subscribe [::subs/shape-cells])
-        typem (map #(if (and (= x (first %))
-                      (= y (second %)))
-               "blue"
-               ) marked)
-        type (reduce (fn [a b] (or a b)) typem)
-]
-    ; (println "typem " typem)
+  (let [shape-cells  @(rf/subscribe [::subs/shape-cells])
+        bullet-cells  @(rf/subscribe [::subs/bullet-cells])
+        ; has-shape (contains? shape-cells [x y])
+        is-shape (some #(= [x y] %) shape-cells)
+        is-bullet (some #(= [x y] %) bullet-cells)
+        ; is-shape (reduce (fn [a b] (or a b)) has-shape)
+        ; type (if is-shape "shape" "white")
+        
+        ]
+(if is-bullet (println "bullet at" x y))
+(if is-shape (println "shape at" x y))
+    ; (println "bullet-cells " bullet-cells)
+    ; (println "has-shape " has-shape "type" type)
     [:div
      {:id "sd"
       :style {:border "solid"
               :border-width 1
               :width 10
               :height 10
-              :background-color (get-color type)}}]))
+              :background-color (get-color is-shape is-bullet)}}]))
 
 (defn grid-row [y w]
   [:div {:style

@@ -19,6 +19,11 @@
    (get-in db [:shapes :cells])))
 
 (re-frame/reg-sub
+ ::bullet-cells
+ (fn [db]
+   (get-in db [:bullets :cells])))
+
+(re-frame/reg-sub
  ::lcd-text
  (fn [db]
    (:lcd-text db)))

@@ -6,6 +6,7 @@
 
 (defn get-color [is-shape is-bullet]
   (cond
+    (and is-bullet is-shape) "red"
     is-shape "lightblue"
     is-bullet "black"
     :else "white"))
@@ -13,13 +14,10 @@
 (defn cell [x y]
   (let [shape-cells  @(rf/subscribe [::subs/shape-cells])
         bullet-cells  @(rf/subscribe [::subs/bullet-cells])
-        ; has-shape (contains? shape-cells [x y])
+       
         is-shape (some #(= [x y] %) shape-cells)
-        is-bullet (some #(= [x y] %) bullet-cells)
-        ; is-shape (reduce (fn [a b] (or a b)) has-shape)
-        ; type (if is-shape "shape" "white")
-        
-        ]
+        is-bullet (some #(= [x y] %) bullet-cells)]
+
 (if is-bullet (println "bullet at" x y))
 (if is-shape (println "shape at" x y))
     ; (println "bullet-cells " bullet-cells)

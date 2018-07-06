@@ -13,7 +13,7 @@
 
 
 (re-frame/reg-event-db
- ::move
+ ::move-shapes
  (fn [db [e _ _]]
    (let [cells-pos (get-in db [:shapes :cells])
          direction (get-in db [:shapes :direction] )
@@ -25,6 +25,18 @@
          ]
     ;  (println "============" e "tox" tox "newpositions" newpositions  "veo" veo)
      (assoc-in db [:shapes :cells] veo))))
+
+(re-frame/reg-event-db
+ ::move-bullets
+ (fn [db [e _ _]]
+   (let [cells-pos (get-in db [:bullets :cells])
+         direction (get-in db [:bullets :direction] )
+         [tox toy] (utils/offset-cells cells-pos direction)
+         dimensions (:grid-dimensions db)
+         newpositions (utils/wrap-move dimensions tox toy)
+         veo (apply map vector newpositions);recreate to format [[1 1] [0 1]]
+         ]
+     (assoc-in db [:bullets :cells] veo))))
 
 (re-frame/reg-event-db
  ::set-direction

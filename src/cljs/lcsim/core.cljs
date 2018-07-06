@@ -25,7 +25,9 @@
   (mount-root))
 
 (defn move []
-  (re-frame/dispatch [::events/move 1 2]))
+  (re-frame/dispatch [::events/move-shapes])
+  (re-frame/dispatch [::events/move-bullets])
+  )
 
 
 (js/setInterval #(move) 1000)

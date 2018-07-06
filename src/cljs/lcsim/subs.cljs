@@ -31,3 +31,8 @@
  ::lcd-text
  (fn [db]
    (:lcd-text db)))
+
+(re-frame/reg-sub
+ ::score
+ (fn [db]
+   (:score db)))

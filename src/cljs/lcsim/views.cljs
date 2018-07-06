@@ -50,6 +50,10 @@
       [:div
        [:p "The LCD text is: " @(rf/subscribe [::subs/lcd-text])]
        ])
+(defn score-text []
+      [:div
+       [:p "score: " @(rf/subscribe [::subs/score])]
+       ])
 
 
 (defn grid []
@@ -85,6 +89,7 @@
   (let [name (rf/subscribe [::subs/name])]
     [:div
      [:p "H " @name]
+     [score-text]
      [repeat-text]
      [grid]
      [controls]

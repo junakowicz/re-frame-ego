@@ -39,6 +39,11 @@
      (assoc-in db [:bullets :cells] filtered))))
 
 
+(defn subtract [all bad]
+  (let [as (into #{} all)
+        bs (into #{} bad)]
+    (into [] (clojure.set/difference as bs))))
+
 (re-frame/reg-event-fx
  ::check-collision
  (fn [{:keys [db]} [_ _]]
@@ -46,18 +51,16 @@
          shape-pos (get-in db [:shapes :cells])
          colision (first (for [bullet bullets-pos] (if (some #(= bullet %) shape-pos) bullet)))
          colisions (for [bullet bullets-pos] (if (some #(= bullet %) shape-pos) bullet))
-         out-shape-pos (if colision (filterv (fn [x] 
-          (println "x" x)
-          (not(= x colision))) shape-pos) shape-pos)
-         out-bullets-pos (if colision (filterv (fn [x]
-                        (not (= x colision))) bullets-pos) bullets-pos)
+         colisions-clean (filter #(not= nil %) colisions)
+         out-shape-pos (if (not (empty? colisions-clean))  (subtract shape-pos colisions-clean) shape-pos)
+         out-bullets-pos (if (not (empty? colisions-clean)) (subtract bullets-pos colisions-clean) bullets-pos)
          db-removed-shapes (assoc-in db [:shapes :cells] out-shape-pos)
          db-removed-bullets-shapes (assoc-in db-removed-shapes [:bullets :cells] out-bullets-pos)
    ]
-                 (println "colisions" colisions "colision: " colision "bullets-pos" bullets-pos)
+                 (println "colisions-clean" colisions-clean "colision: " colision "bullets-pos" bullets-pos)
 
 
-      (if colision {:db db-removed-bullets-shapes
+      (if (not (empty? colisions-clean)) {:db db-removed-bullets-shapes
                     :dispatch [::update-score 1]}
                    {:db db-removed-bullets-shapes})
      )))

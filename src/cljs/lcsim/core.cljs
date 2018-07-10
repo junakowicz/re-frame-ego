@@ -27,6 +27,7 @@
 (defn move []
   (re-frame/dispatch [::events/move-shapes])
   (re-frame/dispatch [::events/move-bullets])
+  (re-frame/dispatch [::events/check-collision])
   )
 
 (defn keydown [e]

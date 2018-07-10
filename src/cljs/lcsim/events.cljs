@@ -38,6 +38,30 @@
          filtered (filterv (fn [x] (not (or (= (first x) nil) (= (second x) nil)))) veo)]
      (assoc-in db [:bullets :cells] filtered))))
 
+
+(re-frame/reg-event-fx
+ ::check-collision
+ (fn [{:keys [db]} [_ _]]
+   (let [bullets-pos (get-in db [:bullets :cells])
+         shape-pos (get-in db [:shapes :cells])
+         colision (first (for [bullet bullets-pos] (if (some #(= bullet %) shape-pos) bullet)))
+         colisions (for [bullet bullets-pos] (if (some #(= bullet %) shape-pos) bullet))
+         out-shape-pos (if colision (filterv (fn [x] 
+          (println "x" x)
+          (not(= x colision))) shape-pos) shape-pos)
+         out-bullets-pos (if colision (filterv (fn [x]
+                        (not (= x colision))) bullets-pos) bullets-pos)
+         db-removed-shapes (assoc-in db [:shapes :cells] out-shape-pos)
+         db-removed-bullets-shapes (assoc-in db-removed-shapes [:bullets :cells] out-bullets-pos)
+   ]
+                 (println "colisions" colisions "colision: " colision "bullets-pos" bullets-pos)
+
+
+      (if colision {:db db-removed-bullets-shapes
+                    :dispatch [::update-score 1]}
+                   {:db db-removed-bullets-shapes})
+     )))
+
 (re-frame/reg-event-db
  ::set-direction
  (fn [db [e d]]
@@ -52,6 +76,14 @@
                    
    {:db  (assoc db :lcd-text (string/upper-case d))          
     :dispatch [::reset-screen]
+    }))
+
+(re-frame/reg-event-fx                             
+ ::update-score
+ (fn [{:keys [db]} [e d]]
+     (println "============fx" e d)
+                   
+   {:db (assoc db :score (+ d (:score db)))          
     }))
 
 (re-frame/reg-event-db

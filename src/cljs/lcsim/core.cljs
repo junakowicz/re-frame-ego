@@ -24,8 +24,11 @@
   (dev-setup)
   (mount-root))
 
-(defn move []
+(defn move-shapes []
   (re-frame/dispatch [::events/move-shapes])
+  ; (re-frame/dispatch [::events/check-collision])
+  )
+(defn move-bullets []
   (re-frame/dispatch [::events/move-bullets])
   (re-frame/dispatch [::events/check-collision])
   )
@@ -36,7 +39,8 @@
     (do (.preventDefault e)
         (re-frame/dispatch [::events/controll-ship (.-keyCode e)]))))
 
-(js/setInterval #(move) 1000)
+(js/setInterval #(move-shapes) 1000)
+(js/setInterval #(move-bullets) 500)
 (set! (.-onkeydown js/document) keydown)
 
 

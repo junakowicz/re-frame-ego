@@ -1,13 +1,13 @@
 (ns lcsim.db)
 
 (def default-db
-  {:name "re-frame"
-   :grid-dimensions {:w 30 :h 10}
-   :shapes {:cells  [[1 1]]
+  {:grid-dimensions {:w 30 :h 10}
+   :shapes {:cells  []
             :direction {:x 1 :y 1}}
-   :bullets {:cells  [[3 3]]
+   :bullets {:cells  []
              :direction {:x 0 :y -1}}
    :ship {:cells  [[4 4]       [6 4]
                    [4 5] [5 5] [6 5]]}
    :score 0
-   :lcd-text "H"})
+   :lcd-text "NAME"
+   :active-panel :welcome})

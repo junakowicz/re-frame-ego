@@ -2,7 +2,9 @@
   (:require
    [re-frame.core :as rf]
    [lcsim.events :as events]
-   [lcsim.subs :as subs]))
+   [lcsim.subs :as subs]
+   [lcsim.core :as core]
+   ))
 
 (defn get-color [is-shape is-bullet is-ship]
   (cond
@@ -37,12 +39,13 @@
   [:div {:style
          {:display "flex"
           :flex-wrap "nowrap"}}
-   (for [x (range w)] [cell x y])])
+   (for [x (range w)] ^{:key (str y x)} [cell x y])])
 
 (defn input-lcd-text []
   (let [lcd-text (rf/subscribe [::subs/lcd-text])]
     (fn []
-      [:div
+      [:div "ENTER YOUR NAME"
+       [:br]
         [:input       {:value @lcd-text
          :on-change   #(rf/dispatch [::events/lcd-text-change (-> % .-target .-value)])}]])))
 
@@ -52,7 +55,7 @@
        ])
 (defn score-text []
       [:div
-       [:p "score: " @(rf/subscribe [::subs/score])]
+       [:h2 "SCORE: " @(rf/subscribe [::subs/score])]
        ])
 
 
@@ -61,10 +64,10 @@
         w (:w grid-dimensions)
         h (:h grid-dimensions)]
     [:div
-     (for [y (range h)] [grid-row y w])]))
+     (for [y (range h)] ^{:key (str y w)} [grid-row y w])]))
 
 (defn controls []
-    [:div
+    [:div 
      [:div {:style
             {:display "flex"
               :flex-wrap "nowrap"}}
@@ -85,16 +88,37 @@
      [:button {:on-click #(rf/dispatch [::events/set-direction {:x 0 :y 1}])} "|"]
      [:button {:on-click #(rf/dispatch [::events/set-direction {:x 1  :y 1}])} "\\"]]])
 
-(defn main-panel []
-  (let [name (rf/subscribe [::subs/name])]
-    [:div
-     [:p "H " @name]
-     [score-text]
-     [repeat-text]
-     [grid]
-     [controls]
-     [input-lcd-text]
-     ]
-             ))
+(defn welcome
+  []
+  [:div
+   [repeat-text]
+   [grid]
+   [input-lcd-text]
+   [:button  {:on-click #(rf/dispatch [::events/set-active-panel :game]
+                                    (core/start-game)  
+                                      )}
+    "START"]])
+
+(defn game
+  []
+  [:div
+   [score-text]
+   [grid]
+   [controls]])
+
+(defn end
+  []
+  [:div "There"])
+
+
+(defn main-panel
+  []
+  (let [active  (rf/subscribe [::subs/active-panel])]
+    (fn []
+      [:div
+       [:div "Heading"]
+       (condp = @active                ;; or you could look up in a map
+         :welcome   [welcome]
+         :game   [game])])))
 
 

@@ -11,6 +11,13 @@
  (fn [_ _]
    db/default-db))
 
+; NAVIGATION
+
+(re-frame/reg-event-db
+ ::set-active-panel
+ (fn [db [_ value]]
+   (assoc db :active-panel value)))
+
 
 (re-frame/reg-event-db
  ::move-shapes

@@ -23,14 +23,10 @@
         is-bullet (some #(= [x y] %) bullet-cells)
         is-ship (some #(= [x y] %) ship-cells)]
 
-; (if is-bullet (println "bullet at" x y "ship-cells" ship-cells))
-; (if is-shape (println "shape at" x y))
-    ; (println "bullet-cells " bullet-cells)
-    ; (println "has-shape " has-shape "type" type)
     [:div
-     {:id "sd"
-      :style {:border "solid"
+     {:style {:border "solid"
               :border-width 1
+              :border-color "lightgray"
               :width 10
               :height 10
               :background-color (get-color is-shape is-bullet is-ship)}}]))
@@ -46,7 +42,7 @@
     (fn []
       [:div "ENTER YOUR NAME"
        [:br]
-        [:input       {:value @lcd-text
+        [:input  {:value @lcd-text :maxLength 7
          :on-change   #(rf/dispatch [::events/lcd-text-change (-> % .-target .-value)])}]])))
 
 (defn repeat-text []
@@ -63,7 +59,8 @@
   (let [grid-dimensions @(rf/subscribe [::subs/grid-dimensions])
         w (:w grid-dimensions)
         h (:h grid-dimensions)]
-    [:div
+     [:div {:style
+            {:display "inline-block"}}
      (for [y (range h)] ^{:key (str y w)} [grid-row y w])]))
 
 (defn controls []
@@ -115,9 +112,12 @@
   []
   (let [active  (rf/subscribe [::subs/active-panel])]
     (fn []
-      [:div
+      [:div {:style
+ {:text-align "center"
+  :font-family "sans-serif"
+  }}
        [:div "Heading"]
-       (condp = @active                ;; or you could look up in a map
+       (condp = @active
          :welcome   [welcome]
          :game   [game])])))
 

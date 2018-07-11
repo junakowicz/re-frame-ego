@@ -1,7 +1,7 @@
 (ns lcsim.db)
 
 (def default-db
-  {:grid-dimensions {:w 30 :h 40}
+  {:grid-dimensions {:w 36 :h 40}
    :shapes {:cells  []
             :direction {:x 1 :y 1}}
    :bullets {:cells  []

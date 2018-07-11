@@ -39,8 +39,9 @@
     (do (.preventDefault e)
         (re-frame/dispatch [::events/controll-ship (.-keyCode e)]))))
 
-(js/setInterval #(move-shapes) 1000)
-(js/setInterval #(move-bullets) 500)
-(set! (.-onkeydown js/document) keydown)
+(defn start-game []
+  (js/setInterval #(move-shapes) 500)
+  (js/setInterval #(move-bullets) 250)
+  (set! (.-onkeydown js/document) keydown))
 
 

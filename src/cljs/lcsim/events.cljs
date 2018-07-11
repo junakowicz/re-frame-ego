@@ -31,7 +31,7 @@
         ;  [vex vey] newpositions
          veo (apply map vector newpositions);recreate to format [[1 1] [0 1]]
          ]
-    ;  (println "============" e "tox" tox "newpositions" newpositions  "veo" veo)
+    ;  (println "============" e "tox" tox "toy" toy "newpositions" newpositions  "veo" veo)
      (assoc-in db [:shapes :cells] veo))))
 
 (re-frame/reg-event-db
@@ -66,21 +66,18 @@
          out-bullets-pos (if (not (empty? shape-bullet-clean)) (subtract bullets-pos shape-bullet-clean) bullets-pos)
          db-removed-shapes (assoc-in db [:shapes :cells] out-shape-pos)
          db-removed-bullets-shapes (assoc-in db-removed-shapes [:bullets :cells] out-bullets-pos)
-   ]
-  (println "shape-bullet-clean" shape-bullet-clean "shape-bullet: " shape-bullet "bullets-pos" bullets-pos "shape-ship" shape-ship "ship-pos" ship-pos)
+         shape-direction {:x (if (even? (:score db)) 1 -1) :y 1}]
 
-  (cond
-    (not (empty? shape-ship-clean)) {:db db :dispatch [::game-over :lost]}
-    (empty? shape-pos) {:db db :dispatch [::game-over :won]}
-    (not (empty? shape-bullet-clean)) {:db db-removed-bullets-shapes :dispatch [::update-score 1]}
-    :else {:db db-removed-bullets-shapes})
-
-     )))
+     (cond
+       (not (empty? shape-ship-clean)) {:db db :dispatch [::game-over :lost]}
+       (empty? shape-pos) {:db db :dispatch [::game-over :won]}
+       (not (empty? shape-bullet-clean)) {:db db-removed-bullets-shapes :dispatch-n (list [::update-score 1] [::set-direction shape-direction])}
+       :else {:db db-removed-bullets-shapes}))))
 
 (re-frame/reg-event-db
  ::set-direction
- (fn [db [e d]]
-     (println "============" e d)
+ (fn [db [e d f]]
+     (println "============" e d f)
      (assoc-in db [:shapes :direction] d)))
 
 ; https://github.com/Day8/re-frame/blob/master/docs/EffectfulHandlers.md

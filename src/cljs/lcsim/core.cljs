@@ -54,4 +54,4 @@
   (set! (.-onkeydown js/document) keydown))
 
 ;change direction
-
+;score -1

@@ -111,25 +111,31 @@
    [grid]
    [controls]])
 
-(defn end
+(defn retry
   []
   [:h2 "game over"
    [:br]
    [:button  {:on-click #(rf/dispatch [::events/set-active-panel :continue])} "CONTINUE"]])
+
+(defn won
+  []
+  [:div 
+  [:p "Congratulations you won the prize of non-attachment and patience ;)"]
+  [:p "BTW " [score-text] " was not important"]])
 
 (defn main-panel
   []
   (let [active  (rf/subscribe [::subs/active-panel])]
     (fn []
       [:div {:style
- {:text-align "center"
-  :font-family "sans-serif"
-  }}
+             {:text-align "center"
+              :font-family "sans-serif"}}
        [:div "Heading"]
        (condp = @active
          :welcome   [welcome]
          :continue  [continue]
-         :end   [end]
+         :won  [won]
+         :retry   [retry]
          :game   [game])])))
 
 

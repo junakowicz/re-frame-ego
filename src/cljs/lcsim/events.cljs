@@ -71,6 +71,7 @@
 
   (cond
     (not (empty? shape-ship-clean)) {:db db :dispatch [::game-over :lost]}
+    (empty? shape-pos) {:db db :dispatch [::game-over :won]}
     (not (empty? shape-bullet-clean)) {:db db-removed-bullets-shapes :dispatch [::update-score 1]}
     :else {:db db-removed-bullets-shapes})
 
@@ -100,14 +101,14 @@
    {:db (assoc db :score (+ d (:score db)))          
     }))
 
-(re-frame/reg-event-fx                             
+(re-frame/reg-event-fx
  ::game-over
  (fn [{:keys [db]} [e d]]
-     (println "============fx" e d "db/default-db" db/default-db)
-(core/clear-intervals)
-   {:db db
-    :dispatch [::set-active-panel :end]
-    }))
+   (println "============fx" e d "db/default-db" db/default-db)
+   (core/clear-intervals)
+
+   (if (= d :won) {:db db :dispatch [::set-active-panel :won]}
+       {:db db :dispatch [::set-active-panel :retry]})))
 
 (re-frame/reg-event-db
  ::reset-screen

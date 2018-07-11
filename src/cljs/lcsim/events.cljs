@@ -152,10 +152,17 @@
                 (= k 38) {:x 0 :y -1}
                 (= k 40) {:x 0 :y 1}
                 (= k 37) {:x -1 :y 0}
-                (= k 39) {:x 1 :y 0})
-     action (if step [::move-ship step]
-                [::emit-bullet])]
+                (= k 39) {:x 1 :y 0})]
+     {:db db
+      :dispatch [::move-ship step]})))
 
-     {:db  db
-      :dispatch action})))
+(re-frame/reg-event-fx
+ ::fire
+ (fn [{:keys [db]} [e k]]
+   (println "===========controll=fx" e k)
+   (let [not-continue-screen (not= :continue (:active-panel db))
+         action (if not-continue-screen {:db db
+                                         :dispatch [::emit-bullet]}
+                                        {:db db})]
+     action)))
 

@@ -32,9 +32,13 @@
 
 (defn keydown [e]
   (println (.-keyCode e))
-  (if (some #(= (.-keyCode e) %) [32 37 38 39 40])
+  (if (some #(= (.-keyCode e) %) [37 38 39 40])
     (do (.preventDefault e)
-        (re-frame/dispatch [::events/controll-ship (.-keyCode e)]))))
+        (re-frame/dispatch [::events/controll-ship (.-keyCode e)])))
+
+  (if (some #(= (.-keyCode e) %) [32])
+    (do (.preventDefault e)
+        (re-frame/dispatch [::events/fire (.-keyCode e)]))))
 
 (def intervals (atom []))
 

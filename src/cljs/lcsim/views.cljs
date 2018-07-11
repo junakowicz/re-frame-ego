@@ -92,8 +92,16 @@
    [grid]
    [input-lcd-text]
    [:button  {:on-click #(rf/dispatch [::events/set-active-panel :game]
-                                    (core/start-game)  
-                                      )}
+                                      (core/start-game))}
+    "START"]])
+
+(defn continue
+  []
+  [:div
+   [grid]
+   [:p "(you can change your position)"]
+   [:button  {:on-click #(rf/dispatch [::events/set-active-panel :game]
+                                      (core/start-game))}
     "START"]])
 
 (defn game
@@ -105,8 +113,9 @@
 
 (defn end
   []
-  [:div "There"])
-
+  [:h2 "game over"
+   [:br]
+   [:button  {:on-click #(rf/dispatch [::events/set-active-panel :continue])} "CONTINUE"]])
 
 (defn main-panel
   []
@@ -119,6 +128,8 @@
        [:div "Heading"]
        (condp = @active
          :welcome   [welcome]
+         :continue  [continue]
+         :end   [end]
          :game   [game])])))
 
 

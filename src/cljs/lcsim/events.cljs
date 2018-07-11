@@ -67,23 +67,13 @@
          db-removed-shapes (assoc-in db [:shapes :cells] out-shape-pos)
          db-removed-bullets-shapes (assoc-in db-removed-shapes [:bullets :cells] out-bullets-pos)
    ]
-                 (println "shape-bullet-clean" shape-bullet-clean "shape-bullet: " shape-bullet "bullets-pos" bullets-pos "shape-ship" shape-ship "ship-pos" ship-pos)
-
+  (println "shape-bullet-clean" shape-bullet-clean "shape-bullet: " shape-bullet "bullets-pos" bullets-pos "shape-ship" shape-ship "ship-pos" ship-pos)
 
   (cond
     (not (empty? shape-ship-clean)) {:db db :dispatch [::game-over :lost]}
     (not (empty? shape-bullet-clean)) {:db db-removed-bullets-shapes :dispatch [::update-score 1]}
     :else {:db db-removed-bullets-shapes})
 
-     
-;       (if (not (empty? shape-ship-clean))
-;         {:db db
-;          :dispatch [::game-over :lost]}
-; )
-;       (if (not (empty? shape-bullet-clean))
-;         {:db db-removed-bullets-shapes
-;          :dispatch [::update-score 1]}
-;         {:db db-removed-bullets-shapes})
      )))
 
 (re-frame/reg-event-db

@@ -5,8 +5,7 @@
    [lcsim.events :as events]
    [lcsim.views :as views]
    [lcsim.config :as config]
-   [lcsim.db :as db]
-   ))
+   [lcsim.db :as db]))
 
 (defn dev-setup []
   (when config/debug?
@@ -25,13 +24,11 @@
   (mount-root))
 
 (defn move-shapes []
-  (re-frame/dispatch [::events/move-shapes])
-  ; (re-frame/dispatch [::events/check-collision])
-  )
+  (re-frame/dispatch [::events/move-shapes]))
+
 (defn move-bullets []
   (re-frame/dispatch [::events/move-bullets])
-  (re-frame/dispatch [::events/check-collision])
-  )
+  (re-frame/dispatch [::events/check-collision]))
 
 (defn keydown [e]
   (println (.-keyCode e))
@@ -39,9 +36,20 @@
     (do (.preventDefault e)
         (re-frame/dispatch [::events/controll-ship (.-keyCode e)]))))
 
+(def intervals (atom []))
+
+(defn clear-intervals []
+  (while (last @intervals) (do (println (last @intervals) "cleared")
+                               (js/clearInterval (last @intervals))
+                               (swap! intervals drop-last))))
+
 (defn start-game []
-  (js/setInterval #(move-shapes) 500)
-  (js/setInterval #(move-bullets) 250)
+  (swap! intervals conj (js/setInterval #(move-shapes) 500))
+  (swap! intervals conj (js/setInterval #(move-bullets) 250))
+  (println "INTERVALS " @intervals)
   (set! (.-onkeydown js/document) keydown))
+
+;todo game over screen
+;change direction
 
 

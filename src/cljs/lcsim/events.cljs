@@ -3,6 +3,7 @@
    [re-frame.core :as re-frame]
    [clojure.string :as string]
    [lcsim.db :as db]
+   [lcsim.core :as core]
    [lcsim.utils :as utils]
    ))
 
@@ -56,20 +57,33 @@
  (fn [{:keys [db]} [_ _]]
    (let [bullets-pos (get-in db [:bullets :cells])
          shape-pos (get-in db [:shapes :cells])
-         colision (first (for [bullet bullets-pos] (if (some #(= bullet %) shape-pos) bullet)))
-         colisions (for [bullet bullets-pos] (if (some #(= bullet %) shape-pos) bullet))
-         colisions-clean (filter #(not= nil %) colisions)
-         out-shape-pos (if (not (empty? colisions-clean))  (subtract shape-pos colisions-clean) shape-pos)
-         out-bullets-pos (if (not (empty? colisions-clean)) (subtract bullets-pos colisions-clean) bullets-pos)
+         ship-pos (get-in db [:ship :cells])
+         shape-bullet (for [bullet bullets-pos] (if (some #(= bullet %) shape-pos) bullet))
+         shape-bullet-clean (filter #(not= nil %) shape-bullet)
+         shape-ship (for [ship ship-pos] (if (some #(= ship %) shape-pos) ship))
+         shape-ship-clean (filter #(not= nil %) shape-ship)
+         out-shape-pos (if (not (empty? shape-bullet-clean))  (subtract shape-pos shape-bullet-clean) shape-pos)
+         out-bullets-pos (if (not (empty? shape-bullet-clean)) (subtract bullets-pos shape-bullet-clean) bullets-pos)
          db-removed-shapes (assoc-in db [:shapes :cells] out-shape-pos)
          db-removed-bullets-shapes (assoc-in db-removed-shapes [:bullets :cells] out-bullets-pos)
    ]
-                 (println "colisions-clean" colisions-clean "colision: " colision "bullets-pos" bullets-pos)
+                 (println "shape-bullet-clean" shape-bullet-clean "shape-bullet: " shape-bullet "bullets-pos" bullets-pos "shape-ship" shape-ship "ship-pos" ship-pos)
 
 
-      (if (not (empty? colisions-clean)) {:db db-removed-bullets-shapes
-                    :dispatch [::update-score 1]}
-                   {:db db-removed-bullets-shapes})
+  (cond
+    (not (empty? shape-ship-clean)) {:db db :dispatch [::game-over :lost]}
+    (not (empty? shape-bullet-clean)) {:db db-removed-bullets-shapes :dispatch [::update-score 1]}
+    :else {:db db-removed-bullets-shapes})
+
+     
+;       (if (not (empty? shape-ship-clean))
+;         {:db db
+;          :dispatch [::game-over :lost]}
+; )
+;       (if (not (empty? shape-bullet-clean))
+;         {:db db-removed-bullets-shapes
+;          :dispatch [::update-score 1]}
+;         {:db db-removed-bullets-shapes})
      )))
 
 (re-frame/reg-event-db
@@ -94,6 +108,15 @@
      (println "============fx" e d)
                    
    {:db (assoc db :score (+ d (:score db)))          
+    }))
+
+(re-frame/reg-event-fx                             
+ ::game-over
+ (fn [{:keys [db]} [e d]]
+     (println "============fx" e d "db/default-db" db/default-db)
+(core/clear-intervals)
+   {:db db
+    :dispatch [::set-active-panel :end]
     }))
 
 (re-frame/reg-event-db

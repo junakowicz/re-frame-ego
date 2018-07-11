@@ -46,7 +46,6 @@
          filtered (filterv (fn [x] (not (or (= (first x) nil) (= (second x) nil)))) veo)]
      (assoc-in db [:bullets :cells] filtered))))
 
-
 (defn subtract [all bad]
   (let [as (into #{} all)
         bs (into #{} bad)]
@@ -160,7 +159,7 @@
    (println "===========controll=fx" e k)
    (let [not-continue-screen (not= :continue (:active-panel db))
          action (if not-continue-screen {:db db
-                                         :dispatch [::emit-bullet]}
+                                         :dispatch-n (list [::emit-bullet] [::update-score -1]) }
                                         {:db db})]
      action)))
 

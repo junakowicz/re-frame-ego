@@ -52,6 +52,3 @@
   (swap! intervals conj (js/setInterval #(move-bullets) 250))
   (println "INTERVALS " @intervals)
   (set! (.-onkeydown js/document) keydown))
-
-;change direction
-;score -1

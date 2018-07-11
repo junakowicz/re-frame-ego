@@ -7,6 +7,6 @@
    :bullets {:cells  []
              :direction {:x 0 :y -1}}
    :ship {:cells  [[16 37] [18 37] [16 38] [17 38] [18 38]]}
-   :score 0
+   :score 100
    :lcd-text "NAME"
    :active-panel :welcome})

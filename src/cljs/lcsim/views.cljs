@@ -87,13 +87,14 @@
 
 (defn welcome
   []
+  (let [has-name (not (empty? @(rf/subscribe [::subs/lcd-text])))]
   [:div
    [repeat-text]
    [grid]
    [input-lcd-text]
-   [:button  {:on-click #(rf/dispatch [::events/set-active-panel :game]
-                                      (core/start-game))}
-    "START"]])
+  (when has-name [:button  {:on-click #(rf/dispatch [::events/set-active-panel :game]
+                                      (core/start-game))} "START"])
+   ]))
 
 (defn continue
   []

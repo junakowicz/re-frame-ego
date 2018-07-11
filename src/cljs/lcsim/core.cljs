@@ -53,7 +53,5 @@
   (println "INTERVALS " @intervals)
   (set! (.-onkeydown js/document) keydown))
 
-;todo game over screen
 ;change direction
-
 

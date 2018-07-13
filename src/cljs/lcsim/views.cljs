@@ -3,7 +3,7 @@
    [re-frame.core :as rf]
    [lcsim.events :as events]
    [lcsim.subs :as subs]
-  ;  [lcsim.core :as core]
+   [lcsim.game-control :as game-control]
    ))
 
 (defn get-color [is-shape is-bullet is-ship]
@@ -47,13 +47,11 @@
 
 (defn repeat-text []
       [:div
-       [:p "The LCD text is: " @(rf/subscribe [::subs/lcd-text])]
-       ])
+       [:p "The LCD text is: " @(rf/subscribe [::subs/lcd-text])]])
+
 (defn score-text []
       [:div
-       [:h2 "SCORE: " @(rf/subscribe [::subs/score])]
-       ])
-
+       [:h2 "SCORE: " @(rf/subscribe [::subs/score])]])
 
 (defn grid []
   (let [grid-dimensions @(rf/subscribe [::subs/grid-dimensions])
@@ -85,27 +83,25 @@
      [:button {:on-click #(rf/dispatch [::events/set-direction {:x 0 :y 1}])} "|"]
      [:button {:on-click #(rf/dispatch [::events/set-direction {:x 1  :y 1}])} "\\"]]])
 
+(defn start-button []
+  [:button  {:on-click #(rf/dispatch [::events/set-active-panel :game]
+                                     (game-control/start-game))} "START"])
+
 (defn welcome
   []
   (let [has-name (not (empty? @(rf/subscribe [::subs/lcd-text])))]
-  [:div
-   [repeat-text]
-   [grid]
-   [input-lcd-text]
-  (when has-name [:button  {:on-click #(rf/dispatch [::events/set-active-panel :game]
-                                      ; (core/start-game)
-                                                    )} "START"])
-   ]))
+    [:div
+     [repeat-text]
+     [grid]
+     [input-lcd-text]
+     (when has-name [start-button])]))
 
 (defn continue
   []
   [:div
    [grid]
    [:p "(you can change your position)"]
-   [:button  {:on-click #(rf/dispatch [::events/set-active-panel :game]
-                                      ; (core/start-game)
-                                      )}
-    "START"]])
+   [start-button]])
 
 (defn game
   []
@@ -137,8 +133,8 @@
        (condp = @active
          :welcome   [welcome]
          :continue  [continue]
-         :won  [won]
-         :retry   [retry]
+         :won   (do (game-control/clear-intervals) [won])
+         :retry  (do (game-control/clear-intervals) [retry])
          :game   [game])])))
 
 

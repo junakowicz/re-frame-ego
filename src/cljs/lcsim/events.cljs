@@ -3,7 +3,6 @@
    [re-frame.core :as re-frame]
    [clojure.string :as string]
    [lcsim.db :as db]
-   [lcsim.core :as core]
    [lcsim.utils :as utils]
    ))
 
@@ -101,7 +100,6 @@
  ::game-over
  (fn [{:keys [db]} [e d]]
    (println "============fx" e d "db/default-db" db/default-db)
-   (core/clear-intervals)
 
    (if (= d :won) {:db db :dispatch [::set-active-panel :won]}
        {:db db :dispatch [::set-active-panel :retry]})))

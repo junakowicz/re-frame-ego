@@ -62,15 +62,16 @@
          shape-ship-clean (filter #(not= nil %) shape-ship)
          out-shape-pos (if (not (empty? shape-bullet-clean))  (subtract shape-pos shape-bullet-clean) shape-pos)
          out-bullets-pos (if (not (empty? shape-bullet-clean)) (subtract bullets-pos shape-bullet-clean) bullets-pos)
-         db-removed-shapes (assoc-in db [:shapes :cells] out-shape-pos)
-         db-removed-bullets-shapes (assoc-in db-removed-shapes [:bullets :cells] out-bullets-pos)
+         db-out (-> db
+                    (assoc-in [:shapes :cells] out-shape-pos)
+                    (assoc-in [:bullets :cells] out-bullets-pos))
          shape-direction {:x (if (even? (:score db)) 1 -1) :y 1}]
 
      (cond
-       (not (empty? shape-ship-clean)) {:db db :dispatch [::game-over :lost]}
-       (empty? shape-pos) {:db db :dispatch [::game-over :won]}
-       (not (empty? shape-bullet-clean)) {:db db-removed-bullets-shapes :dispatch-n (list [::update-score 1] [::set-direction shape-direction])}
-       :else {:db db-removed-bullets-shapes}))))
+       (not (empty? shape-ship-clean)) {:db db ::game-over :lost}
+       (empty? shape-pos) {:db db ::game-over :won}
+       (not (empty? shape-bullet-clean)) {:db db-out :dispatch-n (list [::update-score 1] [::set-direction shape-direction])} ;dispatch-n
+       :else {:db db-out}))))
 
 (re-frame/reg-event-db
  ::set-direction
@@ -96,13 +97,14 @@
    {:db (assoc db :score (+ d (:score db)))          
     }))
 
-(re-frame/reg-event-fx
+;effect example
+(re-frame/reg-fx
  ::game-over
- (fn [{:keys [db]} [e d]]
-   (println "============fx" e d "db/default-db" db/default-db)
-
-   (if (= d :won) {:db db :dispatch [::set-active-panel :won]}
-       {:db db :dispatch [::set-active-panel :retry]})))
+ (fn [d]
+   (println "============reg-fxreg-fxfx"  d)
+   (if (= d :won) 
+        (re-frame/dispatch [::set-active-panel :won])
+        (re-frame/dispatch  [::set-active-panel :retry]))))
 
 (re-frame/reg-event-db
  ::reset-screen

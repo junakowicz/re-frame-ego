@@ -3,7 +3,7 @@
    [re-frame.core :as rf]
    [lcsim.events :as events]
    [lcsim.subs :as subs]
-   [lcsim.core :as core]
+  ;  [lcsim.core :as core]
    ))
 
 (defn get-color [is-shape is-bullet is-ship]
@@ -93,7 +93,8 @@
    [grid]
    [input-lcd-text]
   (when has-name [:button  {:on-click #(rf/dispatch [::events/set-active-panel :game]
-                                      (core/start-game))} "START"])
+                                      ; (core/start-game)
+                                                    )} "START"])
    ]))
 
 (defn continue
@@ -102,7 +103,8 @@
    [grid]
    [:p "(you can change your position)"]
    [:button  {:on-click #(rf/dispatch [::events/set-active-panel :game]
-                                      (core/start-game))}
+                                      ; (core/start-game)
+                                      )}
     "START"]])
 
 (defn game

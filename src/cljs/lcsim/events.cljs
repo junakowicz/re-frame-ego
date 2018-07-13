@@ -11,8 +11,7 @@
  (fn [_ _]
    db/default-db))
 
-; NAVIGATION
-
+; SCREENS
 (re-frame/reg-event-db
  ::set-active-panel
  (fn [db [_ value]]
@@ -27,10 +26,8 @@
          [tox toy] (utils/offset-cells cells-pos direction)
          dimensions (:grid-dimensions db)
          newpositions (utils/wrap-move dimensions tox toy)
-        ;  [vex vey] newpositions
          veo (apply map vector newpositions);recreate to format [[1 1] [0 1]]
          ]
-    ;  (println "============" e "tox" tox "toy" toy "newpositions" newpositions  "veo" veo)
      (assoc-in db [:shapes :cells] veo))))
 
 (re-frame/reg-event-db
@@ -112,22 +109,17 @@
    (println "============" e d)
    (let [txt (:lcd-text db)
          cells (utils/cells-from-text txt)]
-     (println "============txt" txt "cells" cells)
-
      (assoc-in db [:shapes :cells] cells))))
 
 ;;SHIP
-
 (re-frame/reg-event-db
  ::emit-bullet
  (fn [db [e _]]
    (let [cells-pos (get-in db [:ship :cells])
          [lcx lcy] (first cells-pos)
          bullet-pos [(inc lcx) lcy]
-        
-     current-bullets (get-in db [:bullets :cells])
-     updated-bullets (concat current-bullets [bullet-pos]) ]
-     (println "===========" "lcx lcy" lcx lcy "bullet-pos " bullet-pos "current-bullets" current-bullets "updated-bullets" updated-bullets)
+         current-bullets (get-in db [:bullets :cells])
+         updated-bullets (concat current-bullets [bullet-pos])]
      (assoc-in db [:bullets :cells] updated-bullets))))
 
 (re-frame/reg-event-db
@@ -142,7 +134,7 @@
      (assoc-in db [:ship :cells] veo))))
 
 (re-frame/reg-event-fx
- ::controll-ship
+ ::control-ship
  (fn [{:keys [db]} [e k]]
    (println "===========controll=fx" e k)
    (let [step (cond
@@ -157,9 +149,7 @@
  ::fire
  (fn [{:keys [db]} [e k]]
    (println "===========controll=fx" e k)
-   (let [not-continue-screen (not= :continue (:active-panel db))
-         action (if not-continue-screen {:db db
-                                         :dispatch-n (list [::emit-bullet] [::update-score -1]) }
-                                        {:db db})]
-     action)))
+  (if (not= :continue (:active-panel db)) 
+        {:db db :dispatch-n (list [::emit-bullet] [::update-score -1]) }
+        {:db db})))
 

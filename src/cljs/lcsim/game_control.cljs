@@ -15,7 +15,7 @@
   (println (.-keyCode e))
   (if (some #(= (.-keyCode e) %) [37 38 39 40])
     (do (.preventDefault e)
-        (rf/dispatch [::events/controll-ship (.-keyCode e)])))
+        (rf/dispatch [::events/control-ship (.-keyCode e)])))
 
   (if (some #(= (.-keyCode e) %) [32])
     (do (.preventDefault e)
@@ -29,7 +29,7 @@
                                (swap! intervals drop-last))))
 
 (defn start-game []
-  (swap! intervals conj (js/setInterval #(move-shapes) 500))
-  (swap! intervals conj (js/setInterval #(move-bullets) 250))
+  (swap! intervals conj (js/setInterval #(move-shapes) 800))
+  (swap! intervals conj (js/setInterval #(move-bullets) 50))
   (println "INTERVALS " @intervals)
   (set! (.-onkeydown js/document) keydown))

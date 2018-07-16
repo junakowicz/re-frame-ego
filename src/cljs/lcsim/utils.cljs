@@ -81,6 +81,7 @@
     (= "8" l) shapes/EIGHT
     (= "9" l) shapes/NINE
     (= "0" l) shapes/ZERO
+    (= "!" l) shapes/BANG
     :else shapes/QUESTION))
 
 (defn cells-from-text [txt]

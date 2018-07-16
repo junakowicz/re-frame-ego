@@ -82,8 +82,9 @@
      [:button {:on-click #(rf/dispatch [::events/set-direction {:x 1  :y 1}])} "\\"]]])
 
 (defn start-button []
-  [:button  {:on-click #(rf/dispatch [::events/set-active-panel :game]
-                                     (game-control/start-game))} "START"])
+  [:button  {:on-click #(do (rf/dispatch [::events/set-active-panel :game])
+                            (rf/dispatch [::events/add-i-my])
+                            (game-control/start-game))} "START"])
 
 ; SCREENS
 (defn welcome

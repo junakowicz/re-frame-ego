@@ -106,10 +106,18 @@
 (re-frame/reg-event-db
  ::reset-screen
  (fn [db [e d]]
-   (println "============" e d)
    (let [txt (:lcd-text db)
          cells (utils/cells-from-text txt)]
      (assoc-in db [:shapes :cells] cells))))
+
+(re-frame/reg-event-db
+ ::add-i-my
+ (fn [db [e d]]
+   (let [txt (:cells db/i-my)
+         cells-pos (get-in db [:shapes :cells])
+        all (concat txt cells-pos)
+         ]
+     (assoc-in db [:shapes :cells] all))))
 
 ;;SHIP
 (re-frame/reg-event-db

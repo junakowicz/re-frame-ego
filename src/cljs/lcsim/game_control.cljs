@@ -29,7 +29,7 @@
                                (swap! intervals drop-last))))
 
 (defn start-game []
-  (swap! intervals conj (js/setInterval #(move-shapes) 800))
-  (swap! intervals conj (js/setInterval #(move-bullets) 50))
+  (swap! intervals conj (js/setInterval #(move-shapes) 576))
+  (swap! intervals conj (js/setInterval #(move-bullets) 32))
   (println "INTERVALS " @intervals)
   (set! (.-onkeydown js/document) keydown))

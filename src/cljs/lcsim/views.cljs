@@ -9,10 +9,10 @@
 (defn get-color [is-shape is-bullet is-ship]
   (cond
     (and is-bullet is-shape) "red"
-    is-shape "lightblue"
-    is-bullet "black"
-    is-ship "lightgreen"
-    :else "white"))
+    is-shape "#186396"
+    is-bullet "#4deaff"
+    is-ship "#35a8ff"
+    :else "#ebf9d1"))
 
 (defn cell [x y]
   (let [shape-cells  @(rf/subscribe [::subs/shape-cells])
@@ -24,11 +24,9 @@
         is-ship (some #(= [x y] %) ship-cells)]
 
     [:div
-     {:style {:border "solid"
-              :border-width 1
-              :border-color "lightgray"
-              :width 10
-              :height 10
+     {:style {:margin 1
+              :width 12
+              :height 12
               :background-color (get-color is-shape is-bullet is-ship)}}]))
 
 (defn grid-row [y w]
@@ -43,7 +41,7 @@
       [:div "ENTER YOUR NAME"
        [:br]
         [:input  {:value @lcd-text :maxLength 7
-         :on-change   #(rf/dispatch [::events/lcd-text-change (-> % .-target .-value)])}]])))
+         :on-change #(rf/dispatch [::events/lcd-text-change (-> % .-target .-value)])}]])))
 
 (defn repeat-text []
       [:div
@@ -87,6 +85,7 @@
   [:button  {:on-click #(rf/dispatch [::events/set-active-panel :game]
                                      (game-control/start-game))} "START"])
 
+; SCREENS
 (defn welcome
   []
   (let [has-name (not (empty? @(rf/subscribe [::subs/lcd-text])))]
@@ -112,15 +111,15 @@
 
 (defn retry
   []
-  [:h2 "game over"
+  [:h2 "Game over"
    [:br]
    [:button  {:on-click #(rf/dispatch [::events/set-active-panel :continue])} "CONTINUE"]])
 
 (defn won
   []
   [:div 
-  [:p "Congratulations you won the prize of non-attachment and patience ;)"]
-  [:p "BTW " [score-text] " was not important"]])
+  [:h2 "Congratulations you won the prize of non-attachment and patience ;)"]
+  [:p "BTW " [score-text] " is not important"]])
 
 (defn main-panel
   []
@@ -128,8 +127,8 @@
     (fn []
       [:div {:style
              {:text-align "center"
-              :font-family "sans-serif"}}
-       [:div "Heading"]
+              :font-family "Monaco, monospace"}}
+       [:h1 "Ego Annihilator"]
        (condp = @active
          :welcome   [welcome]
          :continue  [continue]

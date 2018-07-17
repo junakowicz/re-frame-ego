@@ -8,7 +8,7 @@
              :direction {:x 0 :y -1}}
    :ship {:cells  [[16 37] [18 37] [16 38] [17 38] [18 38]]}
    :score 100
-   :lcd-text "NAME"
+   :lcd-text ""
    :active-panel :welcome})
 
 (def you-won
